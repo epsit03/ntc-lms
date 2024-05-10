@@ -14,11 +14,11 @@ import {
     Select,
     MenuItem,
     Typography,
-    // Dialog,
-    // DialogActions,
-    // DialogContent,
-    // DialogContentText,
-    // DialogTitle,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
 } from "@mui/material"
 import { BackendApi } from "../../client/backend-api"
 import classes from "./styles.module.css"
@@ -106,7 +106,7 @@ export const BookForm = () => {
                 ) {
                     newQuantityHistory.push({ quantity: newQuantity, modifiedAt: dayjs().utc().format() })
                 }
-                BookApi.book
+                BookApi
                     .patchBookByIsbn(bookIsbn, {
                         ...book,
                         priceHistory: newPriceHistory,
@@ -114,7 +114,7 @@ export const BookForm = () => {
                     })
                     .then(() => navigate(-1))
             } else {
-                BookApi.book
+                BookApi
                     .addBook({
                         ...book,
                         priceHistory: [{ price: book.price, modifiedAt: dayjs().utc().format() }],
@@ -239,8 +239,7 @@ export const BookForm = () => {
                             <Select name="keyw" value={book.keyw} onChange={updateBookField} required>
                                 <MenuItem value="Computer">Computer</MenuItem>
                                 <MenuItem value="Programming">Programming</MenuItem>
-                                {/* This functionality is temporary stop  */}
-                                <MenuItem value="Add Category">+ Add keyword</MenuItem>
+                                <MenuItem value="Add Keyword">+ Add keyword</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl className={classes.mb2}>
@@ -256,28 +255,35 @@ export const BookForm = () => {
                             />
                         </FormControl>
                         <FormControl className={classes.mb2}>
-        <InputLabel>Category</InputLabel>
+                            <InputLabel>Category</InputLabel>
+                            <Select name="category" value={book.category} onChange={updateBookField} required>
+                                <MenuItem value="Journals">Journals</MenuItem>
+                                <MenuItem value="Fiction">Fiction</MenuItem>
+                                <MenuItem value="Programming">Non-fiction</MenuItem>
+                                {/* <MenuItem value="Add Category">+ Add keyword</MenuItem> */}
+                            </Select>
+                        </FormControl>
+                        {/* stop for phase 1 */}
+                        {/* <FormControl className={classes.mb2}> */}
+        {/* <InputLabel>Category</InputLabel>
         <Select
           name="category"
           value={book.category}
           onChange={updateBookField}
           required
         >
-                                <MenuItem value="Adventure">Adventure</MenuItem>
-                                <MenuItem value="Designing">Designing</MenuItem>
-                                {/* This functionality is temporary stop  */}
-                                <MenuItem value="Other">OTHER</MenuItem>
-                            </Select>
-      
-          
-          {/* This not working so stop for sometimes */}
-          {/* <MenuItem value="Add Category" onClick={() => setOpenAddCategoryDialog(true)}>
+          {categories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
+          <MenuItem value="Add Category" onClick={() => setOpenAddCategoryDialog(true)}>
             + Add Category
-          </MenuItem> */}
-        {/* </Select> */}
+          </MenuItem>
+        </Select>
       </FormControl>
-      {/* stop for ... */}
-{/* 
+    //   Resume after completion phase 1
+
       <Dialog open={openAddCategoryDialog} onClose={() => setOpenAddCategoryDialog(false)}>
                 <DialogTitle>Add New Category</DialogTitle>
                 <DialogContent>
