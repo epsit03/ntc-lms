@@ -20,9 +20,12 @@ import { BooksList } from "../books-list/books-list"
 import { LoginDialog } from "../login/login-dialog"
 import { BookForm } from "../book-form/book-form"
 import { Book } from "../book/book"
+import { LandingPage } from "./landingPage"
+import { StudentForm } from "../student-form/StudentForm"
+import { AdminDashboard} from "./adminDashboard"
+import { StudentsList } from "../students-list/students-list"
 import { WithLoginProtector } from "../access-control/login-protector"
 import { WithAdminProtector } from "../access-control/admin-protector"
-import { AddStudentForm } from "../../client/backend-api/student"
 
 
 export const AppLayout = () => {
@@ -56,9 +59,9 @@ export const AppLayout = () => {
 
     useEffect(() => {
         if (!user) {
-            navigate("/")
+            navigate("/home")
         } else if (isAdmin) {
-            navigate("/admin/books/add")
+            navigate("/adminDash")
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, isAdmin])
@@ -114,10 +117,10 @@ export const AppLayout = () => {
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-                                        <MenuItem onClick={handleCloseUserMenu}>
+                                        <MenuItem onClick={() => navigate('/adminDash')}>
                                             <Typography textAlign="center">Dashboard</Typography>
                                         </MenuItem>
-                                        <MenuItem onClick={handleLogout}>
+                                        <MenuItem onClick={<Navigate to="/dues" />}>
                                             <Typography textAlign="center">Dues</Typography>
                                         </MenuItem>
                                         <MenuItem onClick={handleLogout}>
@@ -140,7 +143,11 @@ export const AppLayout = () => {
                 </Container>
             </AppBar>
             <Routes>
-                <Route path="/books" exact element={<BooksList />} />
+                <Route path="/booksList" exact element={<BooksList />} />
+                <Route path="/home" exact element={<LandingPage />} /> 
+                <Route path="/adminDash" exact element={<AdminDashboard />} />  
+                <Route path="/stForm" exact element={<StudentForm/>} />
+                <Route path="/stList" exact element={<StudentsList/>} />                  
                 <Route
                     path="/books/:bookIsbn"
                     element={
@@ -149,7 +156,6 @@ export const AppLayout = () => {
                         </WithLoginProtector>
                     }
                 />
-                <Route path="/stForm" exact element = {<AddStudentForm/>} />
                 <Route
                     path="/admin/books/add"
                     element={
@@ -161,6 +167,7 @@ export const AppLayout = () => {
                     }
                     exact
                 />
+                
                 <Route
                     path="/admin/books/:bookIsbn/edit"
                     element={
@@ -171,7 +178,8 @@ export const AppLayout = () => {
                         </WithLoginProtector>
                     }
                 />
-                <Route path="*" element={<Navigate to="/books" replace />} />
+                
+                <Route path="*" element={<Navigate to="/home" replace />} />
             </Routes>
             <LoginDialog
                 open={openLoginDialog}
